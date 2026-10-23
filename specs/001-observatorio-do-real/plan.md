@@ -66,7 +66,7 @@ baixo (centenas a poucos milhares de visitas/mês). Banco previsto < 50 MB.
 | IV. Reprodutibilidade e testes | Payload bruto preservado e deduplicado por hash; versões com `versao_codigo` (git SHA); fórmulas puras com `Decimal` e casos de referência; testes obrigatórios para conectores, tratamento, merge de revisões e fórmulas | ✅ |
 | V. Correlação ≠ causalidade | Textos do resumo gerados por modelos descritivos fixos; blocos "Andar junto não é causar" e "Mais moeda significa mais inflação?"; revisão de textos no checklist de PR | ✅ |
 | VI. Acessibilidade e responsividade | Tabela alternativa para todo gráfico; cor + traço; axe no CI; testes em 360/768/1440 px; `prefers-reduced-motion` | ✅ |
-| VII. Credenciais | Senhas só em segredos do GitHub Actions e do Cloud Run; `.env` no `.gitignore`; interface só conhece a URL pública da API; papéis com privilégio mínimo; RLS em todas as tabelas; gitleaks | ✅ |
+| VII. Credenciais | Senhas só em segredos do GitHub Actions e do Render; `.env` no `.gitignore`; interface só conhece a URL pública da API; papéis com privilégio mínimo; RLS em todas as tabelas; gitleaks | ✅ |
 | VIII. Simplicidade e custo | Planos gratuitos; SQL explícito sem ORM; um único pacote Python para rotinas e API; sem fila, cache distribuído ou orquestrador. Componentes extras justificados em Complexity Tracking | ✅ (com justificativas) |
 
 **Pós-design (Phase 1)**: reavaliado após `data-model.md` e `contracts/`. Nenhuma violação nova;
@@ -103,7 +103,7 @@ ativado. Dados do BCB sob licença ODbL (citar a fonte).
                                                                                     ▼
                          Navegador ──HTTPS──> Cloudflare Pages (React estático)
                               │
-                              └──HTTPS──> API FastAPI (Cloud Run) ──papel api_leitura──> publico
+                              └──HTTPS──> API FastAPI (Render) ──papel api_leitura──> publico
 ```
 
 - Toda escrita no banco acontece pelas rotinas (papel `coletor`). A API só lê.
@@ -158,7 +158,7 @@ Resumo (detalhes em [data-model.md](./data-model.md#fluxo-de-atualização-incre
   `bruto`/`tratado` ⇒ negado.
 - **API de dados do Supabase desativada** (a interface fala só com a FastAPI). Se for reativada,
   expor apenas o schema `publico`.
-- Segredos: `COLETOR_DATABASE_URL` (GitHub Actions), `API_DATABASE_URL` (Cloud Run Secret
+- Segredos: `COLETOR_DATABASE_URL` (GitHub Actions), `API_DATABASE_URL` (variável secreta do Render; antes, Cloud Run Secret
   Manager). A interface recebe apenas `VITE_API_URL`, que é pública.
 - API: somente `GET`; CORS restrito ao domínio do site; limites de tamanho de período; sem logs
   de dados pessoais (não há).
@@ -257,8 +257,8 @@ Custo-alvo: **US$ 0/mês** (preços consultados em 2026-10-22; detalhes e fontes
 |------------|-----------------|-------|--------------------|-----------|
 | Banco | Supabase Free | US$ 0 | 500 MB, 5 GB de tráfego/mês, 2 projetos; **pausa após 7 dias sem atividade**; **sem backup automático**; conexão direta só IPv6 | rotina diária gera atividade; backup semanal com `pg_dump` (dados públicos) como artefato do Actions; conexões pelo pooler IPv4 |
 | Rotinas | GitHub Actions (repositório público) | US$ 0 | cron pode atrasar ou pular execuções; **agendamentos desativados após 60 dias sem atividade no repositório** | horário fora de :00; rotina idempotente com janela de revisão; `workflow_dispatch`; alerta por e-mail em falha |
-| API | Google Cloud Run (cobrança por requisição, `min-instances=0`) | US$ 0 dentro da cota (2 mi req., 180 mil vCPU-s/mês) | exige conta de faturamento com cartão; partida a frio de alguns segundos; cota gratuita em regiões Tier 1 (ex.: `us-east1`) | alerta de orçamento em US$ 1; cache HTTP de 1 h; interface mostra estado `carregando` |
-| API (alternativa) | Render Free | US$ 0 | dorme após 15 min; **partida a frio ~1 min** | aceitável só se não houver cartão; viola SC-006 na primeira visita |
+| API (**escolhida em 2026-10-23**) | Render Free (`render.yaml`) | US$ 0 | 750 h/mês (cobre 1 serviço 24 h); dorme após 15 min; **partida a frio ~1 min** | aviso na interface durante o carregamento; cache HTTP de 1 h; SC-006 só não é atendido na primeira visita após inatividade |
+| API (alternativa) | Google Cloud Run (`min-instances=0`) | US$ 0 dentro da cota | exige cartão; partida a frio de segundos | migração futura se houver cartão |
 | Interface | Cloudflare Pages Free | US$ 0 | 500 builds/mês, 25 MiB por arquivo | — |
 | Domínio | opcional (`.com.br` no Registro.br) | ~R$ 40/ano | — | pode usar `*.pages.dev` e `*.run.app` |
 | **Total** | | **US$ 0/mês** (+ domínio opcional) | | |
@@ -281,8 +281,8 @@ Supabase Pro (US$ 25/mês). Cloud Run acima da cota cobra por uso (centavos para
    chaves legadas.
 2. GitHub: segredos `COLETOR_DATABASE_URL` (pooler, modo sessão, porta 5432) e workflows
    `coleta-diaria.yml` (cron `17 9 * * *` UTC), `ci.yml`, `backup-semanal.yml`.
-3. Cloud Run: imagem `backend/` (FastAPI + Uvicorn), segredo `API_DATABASE_URL` (pooler, modo
-   transação, porta 6543, `prepare_threshold=None`), `CORS_ORIGENS` com o domínio do site.
+3. Render: Blueprint `render.yaml` (imagem `backend/`), variáveis secretas `API_DATABASE_URL`
+   (pooler, modo transação, porta 6543, `prepare_threshold=None`) e `CORS_ORIGENS`.
 4. Cloudflare Pages: build `frontend/` (`npm run build`), variável `VITE_API_URL`.
 5. Validar no ambiente publicado os cenários V2, V6, V10, V13 do [quickstart](./quickstart.md).
 
@@ -302,4 +302,4 @@ Supabase Pro (US$ 25/mês). Cloud Run acima da cota cobra por uso (centavos para
 | API FastAPI separada do site estático | Pedido do usuário; mantém credenciais fora do navegador e centraliza as fórmulas testadas em Python | Ler o Supabase direto do navegador exporia o banco e duplicaria regras em TypeScript |
 | Três schemas (`bruto`, `tratado`, `publico`) | Pedido do usuário; Princípio IV (dados brutos preservados) e VII (público só vê o publicado) | Uma tabela única não permite rollback nem restringir o acesso ao que foi publicado |
 | Histórico SCD2 de observações | Revisões das fontes precisam ser rastreáveis e reproduzíveis | Sobrescrever valores perde a auditoria exigida pelo Princípio IV |
-| Cloud Run (exige conta de faturamento) | Partida a frio de segundos, compatível com SC-006, dentro da cota gratuita | Render Free é mais simples, mas a partida a frio de ~1 min viola SC-006 (mantido como alternativa) |
+| Render Free com partida a frio de ~1 min (decisão do usuário, 2026-10-23) | Hospedagem sem cartão de crédito | Cloud Run atende SC-006 em toda visita, mas exige faturamento ativo; fica como migração futura |

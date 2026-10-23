@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import {
@@ -15,6 +15,15 @@ describe('EstadoDados', () => {
     render(<EstadoDados estado={{ tipo: 'carregando', rotulo: 'IPCA' }} />)
     expect(screen.getByRole('status')).toHaveAttribute('aria-busy', 'true')
     expect(screen.getByText('Carregando dados de IPCA…')).toBeInTheDocument()
+  })
+
+  it('carregando demorado: avisa que o servidor gratuito pode estar acordando', () => {
+    vi.useFakeTimers()
+    render(<EstadoDados estado={{ tipo: 'carregando', rotulo: 'IPCA' }} />)
+    expect(screen.queryByText(/servidor gratuito/)).not.toBeInTheDocument()
+    act(() => vi.advanceTimersByTime(5000))
+    expect(screen.getByText(/servidor gratuito pode levar até um minuto/)).toBeInTheDocument()
+    vi.useRealTimers()
   })
 
   it('sem dados', () => {

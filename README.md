@@ -74,7 +74,7 @@ cd frontend && npm run lint && npm run typecheck && npm test && npx playwright t
 
 ## Publicação e custos
 
-Custo-alvo **US$ 0/mês**: Supabase Free, GitHub Actions, Google Cloud Run (cota gratuita) e
+Custo-alvo **US$ 0/mês**: Supabase Free, GitHub Actions, Render Free (API) e
 Cloudflare Pages. Passo a passo em [`docs/publicacao.md`](docs/publicacao.md).
 
 ### Reativar a coleta agendada

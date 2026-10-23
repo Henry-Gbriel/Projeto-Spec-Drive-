@@ -135,7 +135,14 @@ Todas mensais, saldo de fim de período, unidade **R$ mil** (exibição em R$ bi
 
 ## R-09 — API: hospedagem
 
-- **Decision**: **Google Cloud Run**, cobrança por requisição, `min-instances=0`, região Tier 1
+- **Decisão revista em 2026-10-23 (escolha do usuário)**: **Render Free** (sem cartão),
+  configurado em `render.yaml` (região `virginia`, Docker, `healthCheckPath: /v1/saude`).
+  Consequência aceita: após 15 min sem acessos o serviço dorme e a primeira requisição leva
+  ~1 min, o que **não atende SC-006 na primeira visita** depois de inatividade. Mitigações: a
+  interface avisa, após alguns segundos de carregamento, que o servidor gratuito está
+  acordando; o cache HTTP de 1 h evita novas idas à API; as visitas seguintes atendem SC-006.
+  Migrar para o Cloud Run (abaixo) resolve a partida a frio se houver cartão no futuro.
+- **Decisão original**: **Google Cloud Run**, cobrança por requisição, `min-instances=0`, região Tier 1
   (`us-east1`). Cota gratuita: 2 mi requisições, 180 mil vCPU-s e 360 mil GiB-s por mês. Exige
   conta de faturamento ⇒ alerta de orçamento em US$ 1. Fonte:
   <https://cloud.google.com/run/pricing>.

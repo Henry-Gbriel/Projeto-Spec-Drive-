@@ -2,7 +2,7 @@
  * Estados dos dados (contracts/ui-estados.md, FR-040, FR-041).
  * Todo estado é comunicado por texto e ícone, nunca só por cor.
  */
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { mesAbreviado } from '../formatacao/datas'
 import { ErroDaApi, type Indicador } from '../servicos/api'
 import estilos from './EstadoDados.module.css'
@@ -19,14 +19,7 @@ export type EstadoBloqueante =
 export function EstadoDados({ estado }: { estado: EstadoBloqueante }) {
   switch (estado.tipo) {
     case 'carregando':
-      return (
-        <div className={estilos.esqueleto} aria-busy="true" role="status">
-          <span className="somente-leitor-de-tela">Carregando dados de {estado.rotulo}…</span>
-          <div className={estilos.barra} style={{ width: '40%' }} />
-          <div className={estilos.barra} style={{ width: '70%', height: '2.2rem' }} />
-          <div className={estilos.barra} style={{ width: '100%', height: '5rem' }} />
-        </div>
-      )
+      return <Carregando rotulo={estado.rotulo} />
     case 'sem_dados':
       return (
         <div className={`${estilos.caixa} ${estilos.sem_dados}`} role="status">
@@ -68,6 +61,34 @@ export function EstadoDados({ estado }: { estado: EstadoBloqueante }) {
         </div>
       )
   }
+}
+
+/** Depois deste tempo, avisa que o servidor gratuito da API pode estar acordando. */
+export const ESPERA_AVISO_LENTIDAO_MS = 5000
+
+function Carregando({ rotulo }: { rotulo: string }) {
+  const [demorando, setDemorando] = useState(false)
+  useEffect(() => {
+    const temporizador = setTimeout(() => setDemorando(true), ESPERA_AVISO_LENTIDAO_MS)
+    return () => clearTimeout(temporizador)
+  }, [])
+  return (
+    <div className={estilos.esqueleto} aria-busy="true" role="status">
+      <span className="somente-leitor-de-tela">Carregando dados de {rotulo}…</span>
+      {demorando && (
+        <p className={`${estilos.aviso} ${estilos.avisoNaoPublicado}`}>
+          <Icone nome="relogio" />
+          <span>
+            Os dados estão demorando um pouco: o servidor gratuito pode levar até um minuto para
+            responder na primeira visita. A página continua carregando.
+          </span>
+        </p>
+      )}
+      <div className={estilos.barra} style={{ width: '40%' }} />
+      <div className={estilos.barra} style={{ width: '70%', height: '2.2rem' }} />
+      <div className={estilos.barra} style={{ width: '100%', height: '5rem' }} />
+    </div>
+  )
 }
 
 function CaixaErro({
