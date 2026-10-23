@@ -1,0 +1,7 @@
+{
+  "type": "https://observatorio-do-real.example/erros/entrada-invalida",
+  "title": "Entrada inválida",
+  "status": 400,
+  "detail": "Ainda não há IPCA publicado para out/2026.",
+  "erros": [{ "campo": "inicio", "mensagem": "Ainda não há IPCA publicado para out/2026." }]
+}

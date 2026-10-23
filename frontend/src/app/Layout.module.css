@@ -1,0 +1,20 @@
+.pular {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 20;
+  padding: 0.6rem 1rem;
+  background: var(--cor-amarelo);
+  color: var(--cor-texto-escuro);
+  font-weight: 700;
+  border-radius: 0.375rem;
+}
+
+.pular:focus {
+  top: 0.75rem;
+}
+
+.principal {
+  display: block;
+  outline: none;
+}

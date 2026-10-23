@@ -1,0 +1,39 @@
+{
+  "indicador": {
+    "codigo": "ipca",
+    "nome": "IPCA — variação mensal",
+    "descricao": "Índice oficial de inflação do Brasil. Mede quanto variaram, em cada mês, os preços dos produtos e serviços consumidos pelas famílias.",
+    "fonte": {
+      "instituicao": "IBGE",
+      "codigo_serie": "SIDRA tabela 1737, variável 63",
+      "url_origem": "https://sidra.ibge.gov.br/tabela/1737"
+    },
+    "unidade": "% ao mês",
+    "frequencia": "mensal",
+    "casas_decimais": 2,
+    "natureza": "real",
+    "periodo_disponivel": { "inicio": "1994-01-01", "fim": "2026-09-01" },
+    "atualizacao": {
+      "situacao": "atualizado",
+      "ultima_atualizacao_valida": "2026-10-22T20:24:42.348691Z",
+      "ultima_tentativa": "2026-10-22T20:24:42.348691Z",
+      "mensagem": null
+    }
+  },
+  "periodo": {
+    "inicio": "2025-10-01",
+    "fim_solicitado": "2026-09-01",
+    "fim_utilizado": "2026-09-01",
+    "aviso_nao_publicado": null
+  },
+  "situacao": "ok",
+  "meses_ausentes": [],
+  "acumulado_percentual": "4.58",
+  "fator": "1.045761196750719059421953418",
+  "meses_considerados": 12,
+  "valor_inicial": null,
+  "valor_final": null,
+  "variacao_percentual": null,
+  "minimo": null,
+  "maximo": null
+}

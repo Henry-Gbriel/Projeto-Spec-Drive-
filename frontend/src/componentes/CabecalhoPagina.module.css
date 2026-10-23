@@ -1,0 +1,46 @@
+.cabecalho {
+  border-bottom: 1px solid var(--cor-linha);
+  background-image:
+    linear-gradient(var(--cor-linha) 1px, transparent 1px),
+    linear-gradient(90deg, var(--cor-linha) 1px, transparent 1px);
+  background-size: 5.5rem 5.5rem;
+  background-position: -1px -1px;
+  padding-block: clamp(2.5rem, 7vw, 4.5rem);
+}
+
+.azul {
+  background-color: var(--cor-azul-escuro);
+  background-image:
+    linear-gradient(#16223b 1px, transparent 1px),
+    linear-gradient(90deg, #16223b 1px, transparent 1px);
+}
+
+.grade {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.texto {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.1rem;
+  max-width: 48rem;
+}
+
+.titulo {
+  font-size: clamp(2.2rem, 6.5vw, 4.25rem);
+}
+
+.descricao {
+  max-width: 38rem;
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  color: var(--cor-texto-apoio);
+}
+
+.lateral {
+  flex-shrink: 0;
+}

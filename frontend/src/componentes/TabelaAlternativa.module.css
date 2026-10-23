@@ -1,0 +1,72 @@
+.detalhes summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--tamanho-rotulo);
+  font-weight: 700;
+  letter-spacing: var(--espacamento-rotulo);
+  text-transform: uppercase;
+  color: var(--cor-amarelo);
+}
+
+.detalhes summary::-webkit-details-marker {
+  display: none;
+}
+
+.detalhes summary::before {
+  content: '▸';
+}
+
+.detalhes[open] summary::before {
+  content: '▾';
+}
+
+/* Rolagem horizontal interna ao bloco, nunca da página (SC-008). */
+.rolagem {
+  max-height: 26rem;
+  overflow: auto;
+  border: 1px solid var(--cor-linha);
+  border-radius: 0.375rem;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.tabela caption {
+  padding: 0.75rem;
+  text-align: left;
+  color: var(--cor-texto-apoio);
+}
+
+.tabela th,
+.tabela td {
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid var(--cor-linha);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.tabela thead th {
+  position: sticky;
+  top: 0;
+  background: var(--cor-card);
+  font-size: 0.6875rem;
+  letter-spacing: var(--espacamento-rotulo);
+  text-transform: uppercase;
+  color: var(--cor-texto-apoio);
+}
+
+.tabela tbody th {
+  font-weight: 500;
+}
+
+.numerica {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}

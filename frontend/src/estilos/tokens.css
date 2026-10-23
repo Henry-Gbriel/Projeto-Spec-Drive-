@@ -1,0 +1,44 @@
+/*
+ * Tokens visuais do Observatório do Real.
+ * Fonte: docs/referencias-visuais/desktop/08-componentes-e-estados.png
+ */
+:root {
+  /* Cores de base */
+  --cor-fundo: #0a0b0b; /* quase preto */
+  --cor-verde-profundo: #0c1f17; /* seções */
+  --cor-azul-escuro: #0b1426; /* seções e avisos */
+  --cor-amarelo: #f5d33a; /* ação e destaque */
+  --cor-card: #111413;
+  --cor-area-clara: #e9ecea;
+  --cor-texto: #f2f4f3;
+  --cor-texto-apoio: #a3aba7; /* contraste 8,4:1 sobre o fundo */
+  --cor-texto-escuro: #0a0b0b;
+  --cor-texto-escuro-apoio: #3d4541;
+  --cor-linha: #1e2321;
+  --cor-linha-forte: #333a37;
+  --cor-verde-claro: #3ddc97;
+  --cor-verde-escuro-texto: #0f6b47; /* sobre área clara */
+  --cor-vermelho: #ff7a6b;
+  --cor-fundo-falha: #2a1512;
+  --cor-azul-claro: #9cb8ff;
+
+  /* Séries dos gráficos: cor + traço (nunca só cor) */
+  --serie-ipca: #3ddc97;
+  --serie-dolar: #6b9bff;
+  --serie-euro: #f5d33a;
+  --serie-selic: #b59bff;
+  --serie-base: #ff9a6b;
+
+  /* Tipografia */
+  --fonte-texto: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fonte-editorial: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --tamanho-rotulo: 0.75rem;
+  --espacamento-rotulo: 0.14em;
+
+  /* Espaços e formas */
+  --largura-conteudo: 76rem;
+  --margem-lateral: clamp(1rem, 4vw, 3rem);
+  --raio: 0.5rem;
+  --raio-pilula: 999px;
+  --foco: 0 0 0 3px var(--cor-fundo), 0 0 0 5px var(--cor-amarelo);
+}

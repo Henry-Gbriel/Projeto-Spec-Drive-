@@ -1,0 +1,45 @@
+.termo summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--tamanho-rotulo);
+  font-weight: 700;
+  letter-spacing: var(--espacamento-rotulo);
+  text-transform: uppercase;
+  color: var(--cor-amarelo);
+}
+
+.termo summary::-webkit-details-marker {
+  display: none;
+}
+
+.termo summary::before {
+  content: '▸';
+  transition: transform 0.15s;
+}
+
+.termo[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.corpo {
+  padding: 0 0 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--cor-texto-apoio);
+  max-width: 60ch;
+}
+
+.corpo p + p {
+  margin-top: 0.5rem;
+}
+
+.clara summary {
+  color: var(--cor-verde-escuro-texto);
+}
+
+.clara .corpo {
+  color: var(--cor-texto-escuro-apoio);
+}

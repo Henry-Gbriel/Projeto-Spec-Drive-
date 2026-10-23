@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Educação econômica com dados públicos oficiais sobre o real: inflação, poder de compra, câmbio e moeda em circulação."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fontes sem bloquear a primeira exibição; o texto aparece com a fonte do sistema até carregar. -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;700;800&family=Instrument+Serif:ital@0;1&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;700;800&family=Instrument+Serif:ital@0;1&display=swap"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <noscript
+      ><link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;700;800&family=Instrument+Serif:ital@0;1&display=swap"
+    /></noscript>
+    <title>Observatório do Real</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <main
+        style="
+          max-width: 40rem;
+          margin: 3rem auto;
+          padding: 0 1rem;
+          font-family: system-ui, sans-serif;
+          line-height: 1.6;
+          color: #f2f4f3;
+          background: #0a0b0b;
+        "
+      >
+        <h1>Observatório do Real</h1>
+        <p>
+          Educação econômica com dados públicos oficiais sobre o real: inflação (IPCA), poder de
+          compra, câmbio e moeda em circulação, sempre com fonte, unidade, período e data de
+          atualização.
+        </p>
+        <p>
+          Os gráficos, tabelas e o simulador precisam de JavaScript. Sem ele, você ainda pode baixar
+          as séries publicadas em CSV pela API pública (endereço <code>/v1/indicadores</code>).
+        </p>
+        <p>Fontes: IBGE (SIDRA, tabela 1737) e Banco Central do Brasil (SGS).</p>
+      </main>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

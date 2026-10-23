@@ -1,0 +1,17 @@
+# Postgres local leve para desenvolvimento e testes (alternativa ao `supabase start`).
+# Porta 54329 para não conflitar com um Postgres já instalado na máquina.
+services:
+  banco:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres  # apenas local; nunca usar fora da máquina do desenvolvedor
+      POSTGRES_DB: observatorio
+    ports:
+      - "54329:5432"
+    volumes:
+      - ./infra/bootstrap-supabase-local.sql:/docker-entrypoint-initdb.d/00-bootstrap.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      retries: 30
