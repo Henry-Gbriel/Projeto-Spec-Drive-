@@ -1,0 +1,12 @@
+// Publicação do site estático no Cloudflare Workers (static assets).
+// O build (`npm run build`) gera `dist/`; `npx wrangler deploy` envia só esses arquivos.
+// As variáveis VITE_* são de BUILD: cadastre-as em Settings → Build → Variables and secrets.
+{
+  "name": "projeto-spec-drive",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    // Rotas do React Router (/ipca, /simulador, /sobre...) devolvem index.html.
+    "not_found_handling": "single-page-application",
+  },
+}

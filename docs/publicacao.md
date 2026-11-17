@@ -65,8 +65,7 @@ CORS da API precisa do endereço do site.
    `observatorio-api` (Docker, plano Free, branch `main`, verificação em `/v1/saude`).
 2. Quando o Render pedir as variáveis marcadas como secretas, informe:
    - `API_DATABASE_URL`: a URL do **modo transação (porta 6543)** com a senha do `api_leitura`;
-   - `CORS_ORIGENS`: por enquanto `https://observatorio-do-real.pages.dev` (ajuste no passo 4
-     se o endereço do site for outro).
+   - `CORS_ORIGENS`: o endereço do site (passo 4); até lá, qualquer valor provisório.
 3. Aguarde o primeiro deploy e verifique:
    `curl https://<servico>.onrender.com/v1/saude` → `{"status":"ok","banco":"ok"}`.
 
@@ -74,21 +73,28 @@ CORS da API precisa do endereço do site.
 > seguinte leva cerca de 1 minuto. O site avisa o visitante enquanto espera. Para eliminar
 > isso no futuro: plano pago do Render ou migração para o Google Cloud Run (ver research R-09).
 
-## 4. Site (Cloudflare Pages)
+## 4. Site (Cloudflare Workers, arquivos estáticos)
 
-1. **Workers & Pages → Create → Pages → Connect to Git**, escolha o repositório.
-2. Configuração de build:
-   - Diretório raiz: `frontend`
-   - Comando: `npm ci && npm run build`
-   - Saída: `dist`
-3. Variáveis de ambiente (públicas, embutidas no JavaScript — **nunca** segredos):
+A Cloudflare passou a criar projetos novos como **Workers** com arquivos estáticos (o antigo
+Pages continua funcionando). A configuração fica em `frontend/wrangler.jsonc`: envia só a pasta
+`dist/` e devolve `index.html` nas rotas do React Router.
+
+1. **Workers & Pages → Create → Import a repository**, escolha o repositório.
+2. Configuração:
+   - Nome do projeto: `projeto-spec-drive` (precisa ser igual ao `name` de `frontend/wrangler.jsonc`)
+   - Diretório raiz (path): `frontend`
+   - Comando de build: `npm run build` (a Cloudflare já instala as dependências)
+   - Comando de deploy: `npx wrangler deploy`
+   - Branch de produção: `main`
+3. Variáveis **de build** em **Settings → Build → Variables and secrets** (públicas, embutidas
+   no JavaScript — **nunca** segredos). Variáveis de execução do Worker **não** chegam ao build:
    - `VITE_API_URL=https://<servico>.onrender.com`
    - `VITE_AUTOR_LINKEDIN=https://www.linkedin.com/in/<perfil>`
    - `VITE_AUTOR_EMAIL=<e-mail>`
 
    O build falha de propósito se alguma delas faltar.
-4. Se o endereço final do site for diferente do usado no passo 3, atualize `CORS_ORIGENS` no
-   painel do Render (Environment) e salve: o serviço é reiniciado.
+4. Copie o endereço público (`https://projeto-spec-drive.<conta>.workers.dev`) e coloque-o em
+   `CORS_ORIGENS` no painel do Render (Environment); o serviço é reiniciado.
 
 ## 5. Validação no ambiente publicado
 
