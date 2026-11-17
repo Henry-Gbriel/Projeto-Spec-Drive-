@@ -1,0 +1,256 @@
+{
+  "indicadores": [
+    {
+      "codigo": "ipca",
+      "nome": "IPCA — variação mensal",
+      "descricao": "Índice oficial de inflação do Brasil. Mede quanto variaram, em cada mês, os preços dos produtos e serviços consumidos pelas famílias.",
+      "fonte": {
+        "instituicao": "IBGE",
+        "codigo_serie": "SIDRA tabela 1737, variável 63",
+        "url_origem": "https://sidra.ibge.gov.br/tabela/1737"
+      },
+      "unidade": "% ao mês",
+      "frequencia": "mensal",
+      "casas_decimais": 2,
+      "natureza": "real",
+      "periodo_disponivel": { "inicio": "1994-01-01", "fim": "2026-09-01" },
+      "atualizacao": {
+        "situacao": "atualizado",
+        "ultima_atualizacao_valida": "2026-10-22T20:24:42.348691Z",
+        "ultima_tentativa": "2026-10-22T20:24:42.348691Z",
+        "mensagem": null
+      }
+    },
+    {
+      "codigo": "ipca_indice",
+      "nome": "IPCA — número-índice",
+      "descricao": "O IPCA acumulado desde dezembro de 1993, quando o índice vale 100. Serve para comparar o nível de preços entre duas datas.",
+      "fonte": {
+        "instituicao": "IBGE",
+        "codigo_serie": "SIDRA tabela 1737, variável 2266",
+        "url_origem": "https://sidra.ibge.gov.br/tabela/1737"
+      },
+      "unidade": "número-índice (dez/1993 = 100)",
+      "frequencia": "mensal",
+      "casas_decimais": 2,
+      "natureza": "real",
+      "periodo_disponivel": { "inicio": "1993-12-01", "fim": "2026-09-01" },
+      "atualizacao": {
+        "situacao": "atualizado",
+        "ultima_atualizacao_valida": "2026-10-22T20:24:29.052540Z",
+        "ultima_tentativa": "2026-10-22T20:24:29.052540Z",
+        "mensagem": null
+      }
+    },
+    {
+      "codigo": "dolar_ptax",
+      "nome": "Dólar (PTAX)",
+      "descricao": "Quantos reais são necessários para comprar um dólar, pela taxa de referência calculada pelo Banco Central. Média mensal das cotações de venda.",
+      "fonte": {
+        "instituicao": "Banco Central do Brasil",
+        "codigo_serie": "SGS 3698",
+        "url_origem": "https://www3.bcb.gov.br/sgspub/consultarvalores/telaCvsSelecionarSeries.paint"
+      },
+      "unidade": "R$ por US$",
+      "frequencia": "mensal",
+      "casas_decimais": 4,
+      "natureza": "real",
+      "periodo_disponivel": null,
+      "atualizacao": {
+        "situacao": "aguardando_integracao",
+        "ultima_atualizacao_valida": null,
+        "ultima_tentativa": null,
+        "mensagem": null
+      }
+    },
+    {
+      "codigo": "euro_ptax",
+      "nome": "Euro (PTAX)",
+      "descricao": "Quantos reais são necessários para comprar um euro, pela taxa de referência calculada pelo Banco Central. Média mensal das cotações diárias de venda.",
+      "fonte": {
+        "instituicao": "Banco Central do Brasil",
+        "codigo_serie": "SGS 21619",
+        "url_origem": "https://www3.bcb.gov.br/sgspub/consultarvalores/telaCvsSelecionarSeries.paint"
+      },
+      "unidade": "R$ por €",
+      "frequencia": "mensal",
+      "casas_decimais": 4,
+      "natureza": "real",
+      "periodo_disponivel": null,
+      "atualizacao": {
+        "situacao": "aguardando_integracao",
+        "ultima_atualizacao_valida": null,
+        "ultima_tentativa": null,
+        "mensagem": null
+      }
+    },
+    {
+      "codigo": "selic_meta",
+      "nome": "Taxa Selic meta",
+      "descricao": "Taxa básica de juros da economia, definida pelo Comitê de Política Monetária (Copom) do Banco Central. Valor vigente no último dia de cada mês.",
+      "fonte": {
+        "instituicao": "Banco Central do Brasil",
+        "codigo_serie": "SGS 432",
+        "url_origem": "https://www3.bcb.gov.br/sgspub/consultarvalores/telaCvsSelecionarSeries.paint"
+      },
+      "unidade": "% ao ano",
+      "frequencia": "mensal",
+      "casas_decimais": 2,
+      "natureza": "real",
+      "periodo_disponivel": null,
+      "atualizacao": {
+        "situacao": "aguardando_integracao",
+        "ultima_atualizacao_valida": null,
+        "ultima_tentativa": null,
+        "mensagem": null
+      }
+    },
+    {
+      "codigo": "base_monetaria",
+      "nome": "Base monetária",
+      "descricao": "Dinheiro em circulação mais as reservas que os bancos mantêm no Banco Central. Saldo no fim de cada mês.",
+      "fonte": {
+        "instituicao": "Banco Central do Brasil",
+        "codigo_serie": "SGS 1788",
+        "url_origem": "https://www3.bcb.gov.br/sgspub/consultarvalores/telaCvsSelecionarSeries.paint"
+      },
+      "unidade": "R$ bilhões",
+      "frequencia": "mensal",
+      "casas_decimais": 1,
+      "natureza": "real",
+      "periodo_disponivel": null,
+      "atualizacao": {
+        "situacao": "aguardando_integracao",
+        "ultima_atualizacao_valida": null,
+        "ultima_tentativa": null,
+        "mensagem": null
+      }
+    },
+    {
+      "codigo": "papel_moeda_circulacao",
+      "nome": "Papel-moeda em circulação",
+      "descricao": "Valor total das cédulas e moedas emitidas pelo Banco Central que estão fora dele. Saldo no fim de cada mês.",
+      "fonte": {
+        "instituicao": "Banco Central do Brasil",
+        "codigo_serie": "SGS 1786",
+        "url_origem": "https://www3.bcb.gov.br/sgspub/consultarvalores/telaCvsSelecionarSeries.paint"
+      },
+      "unidade": "R$ bilhões",
+      "frequencia": "mensal",
+      "casas_decimais": 1,
+      "natureza": "real",
+      "periodo_disponivel": null,
+      "atualizacao": {
+        "situacao": "aguardando_integracao",
+        "ultima_atualizacao_valida": null,
+        "ultima_tentativa": null,
+        "mensagem": null
+      }
+    },
+    {
+      "codigo": "m1",
+      "nome": "Agregado M1",
+      "descricao": "Dinheiro que pode ser usado na hora: cédulas e moedas com o público mais depósitos à vista nos bancos. Saldo no fim de cada mês.",
+      "fonte": {
+        "instituicao": "Banco Central do Brasil",
+        "codigo_serie": "SGS 27791",
+        "url_origem": "https://www3.bcb.gov.br/sgspub/consultarvalores/telaCvsSelecionarSeries.paint"
+      },
+      "unidade": "R$ bilhões",
+      "frequencia": "mensal",
+      "casas_decimais": 1,
+      "natureza": "real",
+      "periodo_disponivel": null,
+      "atualizacao": {
+        "situacao": "aguardando_integracao",
+        "ultima_atualizacao_valida": null,
+        "ultima_tentativa": null,
+        "mensagem": null
+      }
+    },
+    {
+      "codigo": "m2",
+      "nome": "Agregado M2",
+      "descricao": "M1 mais depósitos de poupança e títulos emitidos por bancos. Saldo no fim de cada mês.",
+      "fonte": {
+        "instituicao": "Banco Central do Brasil",
+        "codigo_serie": "SGS 27810",
+        "url_origem": "https://www3.bcb.gov.br/sgspub/consultarvalores/telaCvsSelecionarSeries.paint"
+      },
+      "unidade": "R$ bilhões",
+      "frequencia": "mensal",
+      "casas_decimais": 1,
+      "natureza": "real",
+      "periodo_disponivel": null,
+      "atualizacao": {
+        "situacao": "aguardando_integracao",
+        "ultima_atualizacao_valida": null,
+        "ultima_tentativa": null,
+        "mensagem": null
+      }
+    },
+    {
+      "codigo": "m3",
+      "nome": "Agregado M3",
+      "descricao": "M2 mais quotas de fundos de renda fixa e operações compromissadas com títulos federais. Saldo no fim de cada mês.",
+      "fonte": {
+        "instituicao": "Banco Central do Brasil",
+        "codigo_serie": "SGS 27813",
+        "url_origem": "https://www3.bcb.gov.br/sgspub/consultarvalores/telaCvsSelecionarSeries.paint"
+      },
+      "unidade": "R$ bilhões",
+      "frequencia": "mensal",
+      "casas_decimais": 1,
+      "natureza": "real",
+      "periodo_disponivel": null,
+      "atualizacao": {
+        "situacao": "aguardando_integracao",
+        "ultima_atualizacao_valida": null,
+        "ultima_tentativa": null,
+        "mensagem": null
+      }
+    },
+    {
+      "codigo": "m4",
+      "nome": "Agregado M4",
+      "descricao": "M3 mais títulos públicos de alta liquidez. É a medida mais ampla da quantidade de moeda. Saldo no fim de cada mês.",
+      "fonte": {
+        "instituicao": "Banco Central do Brasil",
+        "codigo_serie": "SGS 27815",
+        "url_origem": "https://www3.bcb.gov.br/sgspub/consultarvalores/telaCvsSelecionarSeries.paint"
+      },
+      "unidade": "R$ bilhões",
+      "frequencia": "mensal",
+      "casas_decimais": 1,
+      "natureza": "real",
+      "periodo_disponivel": null,
+      "atualizacao": {
+        "situacao": "aguardando_integracao",
+        "ultima_atualizacao_valida": null,
+        "ultima_tentativa": null,
+        "mensagem": null
+      }
+    },
+    {
+      "codigo": "producao_cedulas_moedas",
+      "nome": "Produção de cédulas e moedas",
+      "descricao": "Quantidade física de cédulas e moedas produzidas por ano. Mede objetos fabricados, não dinheiro novo na economia.",
+      "fonte": {
+        "instituicao": "Banco Central do Brasil",
+        "codigo_serie": "Olinda mecir_prog_anual_producao",
+        "url_origem": "https://dadosabertos.bcb.gov.br/"
+      },
+      "unidade": "unidade a confirmar",
+      "frequencia": "anual",
+      "casas_decimais": 0,
+      "natureza": "real",
+      "periodo_disponivel": null,
+      "atualizacao": {
+        "situacao": "em_definicao",
+        "ultima_atualizacao_valida": null,
+        "ultima_tentativa": null,
+        "mensagem": null
+      }
+    }
+  ]
+}

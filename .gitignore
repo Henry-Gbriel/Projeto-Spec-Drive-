@@ -1,0 +1,37 @@
+# Segredos (Princípio VII da constituição)
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node / interface
+node_modules/
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+*.log
+
+# Supabase e backups
+supabase/.temp/
+supabase/.branches/
+*.dump
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/

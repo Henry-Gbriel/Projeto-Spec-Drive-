@@ -1,0 +1,35 @@
+name: Backup semanal
+
+# O plano Free do Supabase não tem backup automático (research R-08).
+# Exporta somente DADOS (sem papéis nem senhas). Todo o conteúdo vem de fontes públicas.
+on:
+  schedule:
+    - cron: "33 10 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      # pg_dump precisa ser da mesma versão do servidor ou mais nova (Supabase usa Postgres 17).
+      - name: Instalar cliente do Postgres 17
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y -q postgresql-client-17
+      - name: pg_dump das três camadas
+        env:
+          COLETOR_DATABASE_URL: ${{ secrets.COLETOR_DATABASE_URL }}
+        run: |
+          /usr/lib/postgresql/17/bin/pg_dump "$COLETOR_DATABASE_URL" --data-only --no-owner --no-privileges \
+            --schema=bruto --schema=tratado --schema=publico \
+            --format=custom --file=observatorio-$(date +%F).dump
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backup-observatorio
+          path: "*.dump"
+          retention-days: 90

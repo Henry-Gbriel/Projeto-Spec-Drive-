@@ -1,0 +1,73 @@
+{
+  "indicador": {
+    "codigo": "ipca",
+    "nome": "IPCA — variação mensal",
+    "descricao": "Índice oficial de inflação do Brasil. Mede quanto variaram, em cada mês, os preços dos produtos e serviços consumidos pelas famílias.",
+    "fonte": {
+      "instituicao": "IBGE",
+      "codigo_serie": "SIDRA tabela 1737, variável 63",
+      "url_origem": "https://sidra.ibge.gov.br/tabela/1737"
+    },
+    "unidade": "% ao mês",
+    "frequencia": "mensal",
+    "casas_decimais": 2,
+    "natureza": "real",
+    "periodo_disponivel": { "inicio": "1994-01-01", "fim": "2026-09-01" },
+    "atualizacao": {
+      "situacao": "atualizado",
+      "ultima_atualizacao_valida": "2026-10-22T20:24:42.348691Z",
+      "ultima_tentativa": "2026-10-22T20:24:42.348691Z",
+      "mensagem": null
+    }
+  },
+  "periodo": {
+    "inicio": "2025-10-01",
+    "fim_solicitado": "2026-09-01",
+    "fim_utilizado": "2026-09-01",
+    "aviso_nao_publicado": null
+  },
+  "observacoes": [
+    { "data": "2025-10-01", "valor": "0.09", "situacao": "ok" },
+    { "data": "2025-11-01", "valor": "0.18", "situacao": "ok" },
+    { "data": "2025-12-01", "valor": "0.33", "situacao": "ok" },
+    { "data": "2026-01-01", "valor": "0.33", "situacao": "ok" },
+    { "data": "2026-02-01", "valor": "0.70", "situacao": "ok" },
+    { "data": "2026-03-01", "valor": "0.88", "situacao": "ok" },
+    { "data": "2026-04-01", "valor": "0.67", "situacao": "ok" },
+    { "data": "2026-05-01", "valor": "0.58", "situacao": "ok" },
+    { "data": "2026-06-01", "valor": "0.16", "situacao": "ok" },
+    { "data": "2026-07-01", "valor": "0.07", "situacao": "ok" },
+    { "data": "2026-08-01", "valor": "-0.32", "situacao": "ok" },
+    { "data": "2026-09-01", "valor": "0.82", "situacao": "ok" }
+  ],
+  "derivadas": {
+    "acumulado_no_periodo": [
+      "0.09",
+      "0.27",
+      "0.60",
+      "0.93",
+      "1.64",
+      "2.53",
+      "3.22",
+      "3.82",
+      "3.99",
+      "4.06",
+      "3.73",
+      "4.58"
+    ],
+    "numero_indice": [
+      "7365.68",
+      "7378.94",
+      "7403.29",
+      "7427.72",
+      "7479.71",
+      "7545.53",
+      "7596.09",
+      "7640.15",
+      "7652.37",
+      "7657.73",
+      "7633.23",
+      "7695.82"
+    ]
+  }
+}

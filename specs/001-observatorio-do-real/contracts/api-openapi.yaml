@@ -1,0 +1,483 @@
+openapi: 3.1.0
+info:
+  title: API pública do Observatório do Real
+  version: 1.0.0
+  description: |
+    API somente leitura que serve os dados publicados do Observatório do Real.
+
+    Regras gerais:
+    - Somente dados da camada `publico` são servidos; não há escrita pública.
+    - Toda resposta de série inclui os metadados exigidos pela constituição (Princípio III):
+      fonte, unidade, período de referência e data de atualização.
+    - Valores numéricos são enviados como **string decimal** (ex.: "0.4500") para preservar
+      a precisão; a formatação brasileira é feita na interface.
+    - Observações ausentes são enviadas com `valor: null` e `situacao: "ausente"`; nunca são
+      estimadas.
+    - Datas de referência mensais usam o primeiro dia do mês (`AAAA-MM-01`); parâmetros de
+      período usam `AAAA-MM`.
+    - Erros seguem RFC 9457 (`application/problem+json`) com mensagens em português.
+    - Respostas de leitura enviam `Cache-Control: public, max-age=3600` e `ETag` baseado na
+      versão publicada.
+    - Entrega 1 implementa os caminhos marcados com `x-entrega: 1`.
+servers:
+  - url: http://localhost:8000
+    description: Execução local
+  - url: https://api.observatorio-do-real.example
+    description: Produção (domínio a definir)
+
+paths:
+  /v1/saude:
+    get:
+      x-entrega: 1
+      summary: Verifica se a API está no ar e se o banco responde
+      operationId: obterSaude
+      responses:
+        "200":
+          description: API e banco disponíveis
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, banco]
+                properties:
+                  status: { type: string, enum: [ok] }
+                  banco: { type: string, enum: [ok, indisponivel] }
+
+  /v1/indicadores:
+    get:
+      x-entrega: 1
+      summary: Catálogo de indicadores (US8)
+      description: Lista todos os indicadores do catálogo, inclusive os ainda não integrados.
+      operationId: listarIndicadores
+      responses:
+        "200":
+          description: Catálogo
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [indicadores]
+                properties:
+                  indicadores:
+                    type: array
+                    items: { $ref: "#/components/schemas/Indicador" }
+
+  /v1/indicadores/{codigo}:
+    get:
+      x-entrega: 1
+      summary: Metadados de um indicador
+      operationId: obterIndicador
+      parameters:
+        - $ref: "#/components/parameters/Codigo"
+      responses:
+        "200":
+          description: Indicador
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Indicador" }
+        "404": { $ref: "#/components/responses/NaoEncontrado" }
+
+  /v1/indicadores/{codigo}/serie:
+    get:
+      x-entrega: 1
+      summary: Observações publicadas de um indicador no período (US2, US4, US5, US6)
+      operationId: obterSerie
+      parameters:
+        - $ref: "#/components/parameters/Codigo"
+        - $ref: "#/components/parameters/Inicio"
+        - $ref: "#/components/parameters/Fim"
+        - $ref: "#/components/parameters/Periodo"
+      responses:
+        "200":
+          description: Série no período
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Serie" }
+        "400": { $ref: "#/components/responses/EntradaInvalida" }
+        "404": { $ref: "#/components/responses/NaoEncontrado" }
+        "409": { $ref: "#/components/responses/NaoIntegrado" }
+
+  /v1/indicadores/{codigo}/serie.csv:
+    get:
+      x-entrega: 1
+      summary: Download da série em CSV (FR-030, FR-031)
+      description: |
+        Sem `inicio`/`fim`/`periodo`, devolve a série completa (uso do catálogo).
+        Formato descrito em `contracts/csv.md`.
+      operationId: baixarSerieCsv
+      parameters:
+        - $ref: "#/components/parameters/Codigo"
+        - $ref: "#/components/parameters/InicioOpcional"
+        - $ref: "#/components/parameters/FimOpcional"
+        - $ref: "#/components/parameters/Periodo"
+      responses:
+        "200":
+          description: Arquivo CSV
+          headers:
+            Content-Disposition:
+              schema: { type: string }
+              example: attachment; filename="ipca_2021-01_2025-12.csv"
+          content:
+            text/csv:
+              schema: { type: string }
+        "400": { $ref: "#/components/responses/EntradaInvalida" }
+        "404": { $ref: "#/components/responses/NaoEncontrado" }
+        "409": { $ref: "#/components/responses/NaoIntegrado" }
+
+  /v1/indicadores/{codigo}/resumo:
+    get:
+      x-entrega: 1
+      summary: Números-síntese do período (cartões de indicador)
+      description: |
+        Para IPCA: inflação acumulada (FR-022). Para séries de nível: variação, início, fim,
+        mínimo e máximo (FR-023). O cálculo não é feito se houver mês ausente no período
+        (`situacao: "lacuna"`).
+      operationId: obterResumo
+      parameters:
+        - $ref: "#/components/parameters/Codigo"
+        - $ref: "#/components/parameters/Inicio"
+        - $ref: "#/components/parameters/Fim"
+        - $ref: "#/components/parameters/Periodo"
+      responses:
+        "200":
+          description: Resumo
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Resumo" }
+        "400": { $ref: "#/components/responses/EntradaInvalida" }
+        "404": { $ref: "#/components/responses/NaoEncontrado" }
+        "409": { $ref: "#/components/responses/NaoIntegrado" }
+
+  /v1/simulador/poder-de-compra:
+    get:
+      x-entrega: 1
+      summary: Simulador de poder de compra pelo IPCA (US3, FR-025 a FR-028)
+      operationId: simularPoderDeCompra
+      parameters:
+        - name: valor
+          in: query
+          required: true
+          description: Valor em reais com ponto decimal e até 2 casas (a interface converte de "1.500,00").
+          schema: { type: string, pattern: "^[0-9]{1,13}(\\.[0-9]{1,2})?$", example: "100.00" }
+        - name: inicio
+          in: query
+          required: true
+          schema: { type: string, pattern: "^[0-9]{4}-(0[1-9]|1[0-2])$", example: "2016-01" }
+        - name: fim
+          in: query
+          required: true
+          schema: { type: string, pattern: "^[0-9]{4}-(0[1-9]|1[0-2])$", example: "2025-12" }
+      responses:
+        "200":
+          description: Resultado da simulação
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Simulacao" }
+        "400": { $ref: "#/components/responses/EntradaInvalida" }
+        "422":
+          description: Cálculo impossível por lacuna na série (mês ausente)
+          content:
+            application/problem+json:
+              schema: { $ref: "#/components/schemas/Problema" }
+
+  /v1/painel:
+    get:
+      x-entrega: 2
+      summary: Resumos dos quatro indicadores do painel para o mesmo período (US4)
+      operationId: obterPainel
+      parameters:
+        - $ref: "#/components/parameters/Inicio"
+        - $ref: "#/components/parameters/Fim"
+        - $ref: "#/components/parameters/Periodo"
+      responses:
+        "200":
+          description: Painel
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [periodo, resumos]
+                properties:
+                  periodo: { $ref: "#/components/schemas/PeriodoReferencia" }
+                  resumos:
+                    type: array
+                    items: { $ref: "#/components/schemas/Resumo" }
+        "400": { $ref: "#/components/responses/EntradaInvalida" }
+
+  /v1/comparacao:
+    get:
+      x-entrega: 4
+      summary: Séries em base 100 (US7)
+      operationId: compararIndicadores
+      parameters:
+        - name: indicadores
+          in: query
+          required: true
+          description: De 1 a 4 códigos separados por vírgula.
+          schema: { type: string, example: "ipca_indice,dolar_ptax,base_monetaria" }
+        - $ref: "#/components/parameters/Inicio"
+        - $ref: "#/components/parameters/Fim"
+        - $ref: "#/components/parameters/Periodo"
+      responses:
+        "200":
+          description: Comparação
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Comparacao" }
+        "400": { $ref: "#/components/responses/EntradaInvalida" }
+
+components:
+  parameters:
+    Codigo:
+      name: codigo
+      in: path
+      required: true
+      schema: { type: string, pattern: "^[a-z0-9_]+$", example: ipca }
+    Inicio:
+      name: inicio
+      in: query
+      required: false
+      description: Mês inicial `AAAA-MM`. Obrigatório junto com `fim` quando `periodo` não é enviado.
+      schema: { type: string, pattern: "^[0-9]{4}-(0[1-9]|1[0-2])$" }
+    Fim:
+      name: fim
+      in: query
+      required: false
+      schema: { type: string, pattern: "^[0-9]{4}-(0[1-9]|1[0-2])$" }
+    InicioOpcional:
+      name: inicio
+      in: query
+      required: false
+      schema: { type: string, pattern: "^[0-9]{4}-(0[1-9]|1[0-2])$" }
+    FimOpcional:
+      name: fim
+      in: query
+      required: false
+      schema: { type: string, pattern: "^[0-9]{4}-(0[1-9]|1[0-2])$" }
+    Periodo:
+      name: periodo
+      in: query
+      required: false
+      description: |
+        Atalho de período terminando no último mês publicado do indicador.
+        Sem `periodo` e sem `inicio`/`fim`, o padrão é `5a` (FR-020).
+      schema: { type: string, enum: ["12m", "3a", "5a", "10a"] }
+
+  responses:
+    EntradaInvalida:
+      description: Parâmetros inválidos (FR-028)
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problema" }
+    NaoEncontrado:
+      description: Indicador inexistente
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problema" }
+    NaoIntegrado:
+      description: Indicador existe no catálogo mas ainda não tem versão publicada
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problema" }
+
+  schemas:
+    Decimal:
+      type: string
+      pattern: "^-?[0-9]+(\\.[0-9]+)?$"
+
+    Natureza:
+      type: string
+      enum: [real, ilustrativo]
+
+    SituacaoIndicador:
+      type: string
+      description: Selo do catálogo (FR-042)
+      enum: [atualizado, aguardando_integracao, em_definicao, falha_atualizacao]
+
+    Atualizacao:
+      type: object
+      required: [situacao, ultima_atualizacao_valida]
+      properties:
+        situacao: { $ref: "#/components/schemas/SituacaoIndicador" }
+        ultima_atualizacao_valida:
+          type: [string, "null"]
+          format: date-time
+          description: Quando a versão publicada foi coletada com sucesso.
+        ultima_tentativa:
+          type: [string, "null"]
+          format: date-time
+        mensagem:
+          type: [string, "null"]
+          example: "A atualização de 22/10/2026 falhou. Exibindo a última versão válida."
+
+    Indicador:
+      type: object
+      required: [codigo, nome, descricao, fonte, unidade, frequencia, casas_decimais, natureza, atualizacao]
+      properties:
+        codigo: { type: string, example: ipca }
+        nome: { type: string, example: "IPCA — variação mensal" }
+        descricao: { type: string }
+        fonte:
+          type: object
+          required: [instituicao, url_origem]
+          properties:
+            instituicao: { type: string, example: IBGE }
+            codigo_serie: { type: [string, "null"], example: "SIDRA 1737 / variável 63" }
+            url_origem: { type: string, format: uri }
+        unidade: { type: string, example: "% ao mês" }
+        frequencia: { type: string, enum: [diaria, mensal, anual, por_reuniao] }
+        casas_decimais: { type: integer, minimum: 0, maximum: 6 }
+        natureza: { $ref: "#/components/schemas/Natureza" }
+        periodo_disponivel:
+          type: [object, "null"]
+          required: [inicio, fim]
+          properties:
+            inicio: { type: string, format: date }
+            fim: { type: string, format: date }
+        atualizacao: { $ref: "#/components/schemas/Atualizacao" }
+
+    PeriodoReferencia:
+      type: object
+      required: [inicio, fim_solicitado, fim_utilizado]
+      properties:
+        inicio: { type: string, format: date }
+        fim_solicitado: { type: string, format: date }
+        fim_utilizado:
+          type: string
+          format: date
+          description: Último mês com dado publicado ≤ fim_solicitado.
+        aviso_nao_publicado:
+          type: [string, "null"]
+          example: "O IPCA de set/2026 ainda não foi publicado pelo IBGE. O cálculo usa ago/2026."
+
+    Observacao:
+      type: object
+      required: [data, valor, situacao]
+      properties:
+        data: { type: string, format: date }
+        valor:
+          oneOf:
+            - $ref: "#/components/schemas/Decimal"
+            - type: "null"
+        situacao: { type: string, enum: [ok, ausente] }
+
+    Serie:
+      type: object
+      required: [indicador, periodo, observacoes]
+      properties:
+        indicador: { $ref: "#/components/schemas/Indicador" }
+        periodo: { $ref: "#/components/schemas/PeriodoReferencia" }
+        observacoes:
+          type: array
+          description: Uma por mês do período, em ordem. Vazio ⇒ estado "Sem dados".
+          items: { $ref: "#/components/schemas/Observacao" }
+        derivadas:
+          type: [object, "null"]
+          description: "Colunas calculadas para a tabela (ex.: IPCA acumulado no período, número-índice)."
+          additionalProperties:
+            type: array
+            items:
+              oneOf:
+                - $ref: "#/components/schemas/Decimal"
+                - type: "null"
+
+    Resumo:
+      type: object
+      required: [indicador, periodo, situacao]
+      properties:
+        indicador: { $ref: "#/components/schemas/Indicador" }
+        periodo: { $ref: "#/components/schemas/PeriodoReferencia" }
+        situacao:
+          type: string
+          enum: [ok, sem_dados, lacuna]
+        meses_ausentes:
+          type: array
+          items: { type: string, format: date }
+        acumulado_percentual: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+        fator: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+        meses_considerados: { type: [integer, "null"] }
+        valor_inicial: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+        valor_final: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+        variacao_percentual: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+        minimo: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+        maximo: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+
+    Simulacao:
+      type: object
+      required:
+        [valor_informado, periodo, meses_considerados, fator, valor_corrigido,
+         inflacao_acumulada_percentual, variacao_poder_compra_percentual,
+         equivalente_no_inicio, diferenca_nominal, indicador]
+      properties:
+        valor_informado: { $ref: "#/components/schemas/Decimal" }
+        periodo: { $ref: "#/components/schemas/PeriodoReferencia" }
+        meses_considerados: { type: integer, minimum: 1 }
+        fator:
+          $ref: "#/components/schemas/Decimal"
+          description: Precisão completa; a interface exibe 4 casas.
+        valor_corrigido:
+          $ref: "#/components/schemas/Decimal"
+          description: valor × fator, arredondado a centavos (ROUND_HALF_UP).
+        inflacao_acumulada_percentual: { $ref: "#/components/schemas/Decimal" }
+        variacao_poder_compra_percentual: { $ref: "#/components/schemas/Decimal" }
+        equivalente_no_inicio:
+          $ref: "#/components/schemas/Decimal"
+          description: valor / fator, em centavos.
+        diferenca_nominal:
+          $ref: "#/components/schemas/Decimal"
+          description: valor_corrigido − valor_informado (não é ganho nem perda; é a alta de preços).
+        passos:
+          type: array
+          description: Primeiras variações usadas, para o texto "Como o cálculo funciona".
+          items: { $ref: "#/components/schemas/Observacao" }
+        indicador: { $ref: "#/components/schemas/Indicador" }
+
+    Comparacao:
+      type: object
+      required: [periodo, series, omitidos]
+      properties:
+        periodo: { $ref: "#/components/schemas/PeriodoReferencia" }
+        series:
+          type: array
+          maxItems: 4
+          items:
+            type: object
+            required: [indicador, valor_inicial, valor_final, pontos]
+            properties:
+              indicador: { $ref: "#/components/schemas/Indicador" }
+              valor_inicial: { $ref: "#/components/schemas/Decimal" }
+              valor_final: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+              base100_final: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+              pontos:
+                type: array
+                items: { $ref: "#/components/schemas/Observacao" }
+        omitidos:
+          type: array
+          description: Indicadores sem valor no mês inicial (US7, cenário 5).
+          items:
+            type: object
+            properties:
+              codigo: { type: string }
+              motivo: { type: string }
+
+    Problema:
+      type: object
+      description: RFC 9457
+      required: [type, title, status, detail]
+      properties:
+        type: { type: string, example: "https://observatorio-do-real.example/erros/entrada-invalida" }
+        title: { type: string, example: "Entrada inválida" }
+        status: { type: integer, example: 400 }
+        detail: { type: string, example: "A data inicial deve ser anterior ou igual à data final." }
+        erros:
+          type: array
+          description: Um item por campo, para a interface posicionar a mensagem junto ao campo.
+          items:
+            type: object
+            required: [campo, mensagem]
+            properties:
+              campo: { type: string, example: inicio }
+              mensagem: { type: string }
+        meses_ausentes:
+          type: array
+          items: { type: string, format: date }

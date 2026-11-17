@@ -1,0 +1,78 @@
+.caixa {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.25rem;
+  border: 1px solid var(--cor-linha);
+  border-radius: var(--raio);
+  font-size: 0.875rem;
+}
+
+.titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--tamanho-rotulo);
+  font-weight: 700;
+  letter-spacing: var(--espacamento-rotulo);
+  text-transform: uppercase;
+}
+
+.sem_dados {
+  border-style: dashed;
+  color: var(--cor-texto-apoio);
+  align-items: center;
+  text-align: center;
+}
+
+.erro,
+.falha {
+  background: var(--cor-fundo-falha);
+  border-color: #6e2c24;
+  color: #ffd2cc;
+}
+
+.lacuna,
+.nao_integrado {
+  background: var(--cor-azul-escuro);
+  border-color: #243a66;
+  color: #d6e2ff;
+}
+
+.esqueleto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.barra {
+  height: 0.9rem;
+  border-radius: 4px;
+  background: var(--cor-linha-forte);
+  animation: pulsar 1.6s ease-in-out infinite;
+}
+
+.aviso {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.aviso svg {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.avisoNaoPublicado {
+  background: var(--cor-azul-escuro);
+  color: #d6e2ff;
+}
+
+.avisoFalha {
+  background: var(--cor-fundo-falha);
+  color: #ffd2cc;
+}

@@ -1,0 +1,24 @@
+# Blueprint do Render para a API pública (plano Free).
+# Decisão registrada em specs/001-observatorio-do-real/research.md (R-09).
+# Os valores marcados com sync: false são informados no painel do Render, nunca no Git.
+services:
+  - type: web
+    name: observatorio-api
+    runtime: docker
+    plan: free
+    region: virginia
+    branch: main
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /v1/saude
+    autoDeploy: true
+    envVars:
+      - key: AMBIENTE
+        value: producao
+      # Supabase, pooler em modo transação (porta 6543), usuário api_leitura.<ref>
+      - key: API_DATABASE_URL
+        sync: false
+      # Domínio do site na Cloudflare, ex.: https://observatorio-do-real.pages.dev
+      - key: CORS_ORIGENS
+        sync: false

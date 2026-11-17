@@ -1,0 +1,26 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.texto {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.observatorio {
+  font-size: 0.625rem;
+  letter-spacing: 0.28em;
+  color: var(--cor-texto-apoio);
+}
+
+.real {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
