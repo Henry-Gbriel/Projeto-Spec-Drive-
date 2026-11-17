@@ -276,7 +276,7 @@ Supabase Pro (US$ 25/mês). Cloud Run acima da cota cobra por uso (centavos para
 
 **Passos de publicação**:
 
-1. Supabase: criar projeto (região `sa-east-1`), `supabase link`, `supabase db push`, definir
+1. Supabase: criar projeto (região `us-east-1`, a mesma da API no Render; ver R-09), `supabase link`, `supabase db push`, definir
    senhas dos papéis `coletor` e `api_leitura`, **desativar a API de dados** e desativar as
    chaves legadas.
 2. GitHub: segredos `COLETOR_DATABASE_URL` (pooler, modo sessão, porta 5432) e workflows

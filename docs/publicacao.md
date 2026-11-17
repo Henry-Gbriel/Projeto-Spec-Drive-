@@ -19,7 +19,8 @@ CORS da API precisa do endereço do site.
 
 ## 1. Banco (Supabase)
 
-1. Crie um projeto no plano **Free**, região **South America (São Paulo) `sa-east-1`**.
+1. Crie um projeto no plano **Free**, região **East US (North Virginia) `us-east-1`**, a mesma da API no Render
+   (`render.yaml`, região `virginia`; decisão em research R-09).
 2. Na raiz do repositório:
 
    ```bash

@@ -142,6 +142,10 @@ Todas mensais, saldo de fim de período, unidade **R$ mil** (exibição em R$ bi
   interface avisa, após alguns segundos de carregamento, que o servidor gratuito está
   acordando; o cache HTTP de 1 h evita novas idas à API; as visitas seguintes atendem SC-006.
   Migrar para o Cloud Run (abaixo) resolve a partida a frio se houver cartão no futuro.
+- **Região do banco (2026-11-16)**: o projeto Supabase foi criado em `us-east-1` (N. Virginia),
+  não em `sa-east-1`. Mantido porque a API no Render (`virginia`) fica na mesma região do banco:
+  a ida API → banco é de poucos milissegundos; a distância até o visitante no Brasil (~120 ms)
+  ocorre uma vez por requisição e é amortecida pelo cache HTTP de 1 h.
 - **Decisão original**: **Google Cloud Run**, cobrança por requisição, `min-instances=0`, região Tier 1
   (`us-east1`). Cota gratuita: 2 mi requisições, 180 mil vCPU-s e 360 mil GiB-s por mês. Exige
   conta de faturamento ⇒ alerta de orçamento em US$ 1. Fonte:
