@@ -3,6 +3,7 @@ import { useTitulo } from '../app/Layout'
 import { Icone } from '../componentes/Icone'
 import { EtiquetaSecao } from '../componentes/Selo'
 import { PAGINAS, disponivel, type Pagina } from '../conteudo/site'
+import { LosangoBandeira, MapaPontilhado } from './IlustracoesInicio'
 import estilos from './Inicio.module.css'
 
 const pagina = (caminho: string) => PAGINAS.find((p) => p.caminho === caminho) as Pagina
@@ -169,6 +170,7 @@ export function Inicio() {
   return (
     <>
       <section className={estilos.hero}>
+        <MapaPontilhado className={estilos.heroMapa} />
         <div className={`conteiner ${estilos.heroConteudo}`}>
           <p className={`rotulo ${estilos.chamadaRotulo}`}>Educação econômica com dados públicos</p>
           <h1 className={`titulo-composto ${estilos.heroTitulo}`}>
@@ -229,6 +231,7 @@ export function Inicio() {
       </section>
 
       <section className={estilos.faixa} aria-label="Lema">
+        <LosangoBandeira className={estilos.faixaLosango} />
         <p className={`editorial ${estilos.lema}`}>
           Ordem e progresso também se constroem{' '}
           <span className="destaque-amarelo">com conhecimento.</span>

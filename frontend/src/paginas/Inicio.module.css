@@ -3,17 +3,11 @@
   overflow: hidden;
   border-bottom: 1px solid var(--cor-linha);
   background:
-    radial-gradient(circle at 78% 35%, rgba(245, 211, 58, 0.09), transparent 40%),
-    radial-gradient(
-      circle at 80% 40%,
-      transparent 0 13rem,
-      var(--cor-linha) 13rem 13.06rem,
-      transparent 13.1rem
-    ),
-    var(--cor-fundo);
+    radial-gradient(circle at 78% 35%, rgba(245, 211, 58, 0.09), transparent 40%), var(--cor-fundo);
 }
 
 .heroConteudo {
+  position: relative;
   padding-block: clamp(3.5rem, 10vw, 7rem);
   display: flex;
   flex-direction: column;
@@ -115,14 +109,38 @@
   gap: 1rem;
   padding: clamp(3.5rem, 10vw, 6.5rem) var(--margem-lateral);
   text-align: center;
-  background:
-    radial-gradient(
-      circle at 50% 50%,
-      transparent 0 9rem,
-      rgba(61, 220, 151, 0.18) 9rem 9.06rem,
-      transparent 9.1rem
-    ),
-    var(--cor-verde-profundo);
+  background: var(--cor-verde-profundo);
+  position: relative;
+  overflow: hidden;
+}
+
+.faixaLosango {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.faixa > p {
+  position: relative;
+}
+
+.heroMapa {
+  position: absolute;
+  top: 50%;
+  right: max(-4rem, calc((100vw - 80rem) / 2 - 2rem));
+  width: min(34rem, 48vw);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+@media (max-width: 52rem) {
+  .heroMapa {
+    right: -30%;
+    width: 90vw;
+    opacity: 0.35;
+  }
 }
 
 .lema {
